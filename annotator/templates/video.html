@@ -33,6 +33,8 @@
 <div class="panel-body">
 
   <div class="top-controls">
+    Full Annotation  <input type="text" name="full_text"/>
+    SVO <input type="text" name="svo_description"/>
     {% for label in label_data %}
       <label for="object-radio-{{label.name}}" class="label" style="background-color: #{{label.color}}">
         {{label.name}}

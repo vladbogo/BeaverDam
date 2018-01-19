@@ -229,6 +229,7 @@ class PlayerView {
             this.$on('control-goto-end', 'click', () => this.jumpToTimeAndPause(this.video.duration));
             this.$on('control-delete-keyframe', 'click', () => this.deleteKeyframe());
 
+            $(this).on('keydn-i                ', () => this.addFullAnnotation());
             // better key events => video
             // play/pause
             $(this).on('keydn-space            ', () => this.playPause());
@@ -340,6 +341,10 @@ class PlayerView {
 
     deleteKeyframe() {
         $(this).trigger('delete-keyframe');
+    }
+
+    addFullAnnotation() {
+        $(this).trigger('add-fullannotation');
     }
 
     checkTimeRange() {

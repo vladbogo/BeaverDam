@@ -74,9 +74,11 @@ class Player {
         // When this.annotations is loaded AND view is ready for drawing...
         Promise.all([this.annotationsDataReady(), this.viewReady()]).then(() => {
             for (let annotation of this.annotations) {
-                let rect = this.view.addRect();
-                rect.fill = annotation.fill;
-                this.initBindAnnotationAndRect(annotation, rect);
+         	if (annotation.keyframes.length != 0) { 
+                	let rect = this.view.addRect();
+                	rect.fill = annotation.fill;
+                	this.initBindAnnotationAndRect(annotation, rect);
+                }
             }
 
             $(this).triggerHandler('change-onscreen-annotations');
@@ -88,7 +90,6 @@ class Player {
 
     initBindAnnotationAndRect(annotation, rect) {
         // On PlayerView...
-
         this.annotationRectBindings.push({annotation, rect});
 
 
@@ -176,6 +177,10 @@ class Player {
                 this.addAnnotationAtCurrentTimeFromRect(rect);
                 rect.focus();
                 $(this).triggerHandler('change-keyframes');
+            });
+
+            $(this.view).on('add-fullannotation', () => {
+                this.addFullAnnotation();
             });
 
             $(this.view).on('delete-keyframe', () => {
@@ -419,6 +424,11 @@ class Player {
         this.annotations.push(annotation);
         rect.fill = annotation.fill;
         this.initBindAnnotationAndRect(annotation, rect);
+    }
+
+    addFullAnnotation() {
+        var annotation = Annotation.createFullAnnotation();
+        this.annotations.push(annotation)
     }
 
     deleteAnnotation(annotation) {

@@ -25,14 +25,17 @@ class Annotation {
 
         // Type of annotation
         this.type = type;
-
+        
         // Prevent adding new properties
         Misc.preventExtensions(this, Annotation);
     }
 
     // The hacky but only way to make a Annotation right now.
     static newFromCreationRect() {
-        var type = document.querySelector('input[name = "object"]:checked').value;
+        //var type = document.querySelector('input[name = "object"]:checked').value;
+        var type = document.querySelector('input[name = "svo_description"]').value;
+        document.querySelector('input[name = "svo_description"]').value = '';
+
         var fill = Misc.getRandomColor(type);
         return new Annotation({
             keyframes: [],
@@ -42,6 +45,25 @@ class Annotation {
         });
     }
 
+    // The hacky but only way to make a Annotation right now.
+    static createFullAnnotation() {
+        //var type = document.querySelector('input[name = "object"]:checked').value;
+        var type = document.querySelector('input[name = "full_text"]').value;
+
+        window.alert('Annotation added')
+        
+        var fill = Misc.getRandomColor(type);
+        return new Annotation({
+            keyframes: [],
+            fill: fill,
+            id: 0,
+            type: type,
+        });
+    }
+
+    getId() {
+        return this.keyframes;
+    }
 
     /**
      * A "frame" is the interpolation of the two closest keyframes. It tells us:
