@@ -33,12 +33,19 @@
 <div class="panel-body">
 
   <div class="top-controls">
-    {% for label in label_data %}
+    <!-- {% for label in label_data %}
       <label for="object-radio-{{label.name}}" class="label" style="background-color: #{{label.color}}">
         {{label.name}}
         <input type="radio" name="object" id="object-radio-{{label.name}}" value="{{label.name}}" {% if forloop.first %} checked {% endif %}>
       </label>
-    {% endfor %}
+    {% endfor %} -->
+
+    
+    Video description: <input type="text" name="description" id="description" value="{{ video.description }}"/><br>
+    <script>
+      document.querySelector('input[name = "description"]').value = video.description;
+     </script>
+    Subject: <input type="text" name="subject" />
 
     <a class="btn btn-default" target="_blank" style="margin-left: 25px;"
         {% if help_embed %} id="show-help" {% else %} href="{{help_url}}" {% endif %}>
@@ -146,5 +153,3 @@
 
 </div>
 {% endblock %}
-
-

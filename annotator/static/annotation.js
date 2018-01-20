@@ -32,7 +32,8 @@ class Annotation {
 
     // The hacky but only way to make a Annotation right now.
     static newFromCreationRect() {
-        var type = document.querySelector('input[name = "object"]:checked').value;
+        // var type = document.querySelector('input[name = "object"]:checked').value;
+        var type = document.querySelector('input[name = "subject"]').value;
         var fill = Misc.getRandomColor(type);
         return new Annotation({
             keyframes: [],
