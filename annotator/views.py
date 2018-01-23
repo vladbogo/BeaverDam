@@ -142,13 +142,15 @@ def video(request, video_id):
     })
 
     label_data = []
-    video_labels = video.labels.all()
-    if len(video_labels):
-        for v_label in video_labels:
-            label_data.append({'name': v_label.name, 'color': v_label.color})
-    else:
-        for l in labels:
-            label_data.append({'name': l.name, 'color': l.color})
+
+    if video.annotation != '':
+        annotation_data = json.loads(video.annotation)
+        for a in annotation_data:
+            label_data.append({'name': a['type'], 'color': a['color'][1:]})
+    print(label_data)
+    for l in labels:
+         print(l.color)
+    #label_data.append({'name': l.name, 'color': l.color})
 
     help_content = ''
     if settings.HELP_URL and settings.HELP_USE_MARKDOWN:

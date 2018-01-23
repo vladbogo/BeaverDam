@@ -34,12 +34,13 @@
 
   <div class="top-controls">
     SVO <input type="text" name="svo_description"/>
-    <!-- {% for label in label_data %}
-      <label for="object-radio-{{label.name}}" class="label" style="background-color: #{{label.color}}">
-        {{label.name}}
-        <input type="radio" name="object" id="object-radio-{{label.name}}" value="{{label.name}}" {% if forloop.first %} checked {% endif %}>
-      </label>
-    {% endfor %} --!>
+    <select id="labels" name="labels">
+      {% for label in label_data %}
+        <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
+	{{label.name}}
+	</option>
+      {% endfor %}
+    </select>
     
     Video description: <input type="text" name="description" id="description" value="{{ video.description }}"/><br>
     <script>
