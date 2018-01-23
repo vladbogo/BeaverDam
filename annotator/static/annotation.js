@@ -36,6 +36,8 @@ class Annotation {
         var type = document.querySelector('input[name = "svo_description"]').value;
         document.querySelector('input[name = "svo_description"]').value = '';
 
+        // var type = document.querySelector('input[name = "object"]:checked').value;
+        // var type = document.querySelector('input[name = "subject"]').value;
         var fill = Misc.getRandomColor(type);
         return new Annotation({
             keyframes: [],

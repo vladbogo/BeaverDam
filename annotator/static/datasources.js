@@ -46,6 +46,8 @@ var DataSources = {
         },
     },
 
+    description: "",
+
     annotations: {
         fromJson: function(json) {
             return json.map(DataSources.annotation.fromJson);
@@ -71,8 +73,18 @@ var DataSources = {
             });
         },
 
-        save: function(id, annotations, metrics, mturk) {
+        save: function(desc,id, annotations, metrics, mturk) {
+            //console.log(desc);
             var json = DataSources.annotations.toJson(annotations);
+            var object = JSON.stringify({
+                description: desc,
+                annotation: json,
+                metrics: metrics,
+                hitId: window.hitId,
+                workerId: window.workerId,
+                assignmentId: window.assignmentId,
+            });
+            console.log(object);
             return fetch(`/annotation/${id}/`, {
                 headers: {
                     'X-CSRFToken': window.CSRFToken,
@@ -80,13 +92,7 @@ var DataSources = {
                 },
                 credentials: 'same-origin',
                 method: 'post',
-                body: JSON.stringify({
-                    annotation: json,
-                    metrics: metrics,
-                    hitId: window.hitId,
-                    workerId: window.workerId,
-                    assignmentId: window.assignmentId,
-                }),
+                body: object
             }).then((response) => {
                 if (response.ok) {
                     if (mturk) {

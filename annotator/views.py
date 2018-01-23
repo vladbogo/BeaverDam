@@ -137,7 +137,8 @@ def video(request, video_id):
         'rejected': video.rejected,
         'start_time': start_time,
         'end_time' : end_time,
-        'turk_task' : full_video_task_data
+        'turk_task' : full_video_task_data,
+        'description' : video.description
     })
 
     label_data = []
@@ -182,6 +183,7 @@ class AnnotationView(View):
 
         video = Video.objects.get(id=video_id)
         video.annotation = json.dumps(data['annotation'])
+        video.description = data['description']
         video.save()
 
         hit_id = data.get('hitId', None)

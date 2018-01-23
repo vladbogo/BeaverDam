@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(blank=True, max_length=100)),
                 ('annotation', models.TextField(blank=True)),
                 ('source', models.CharField(blank=True, max_length=1048)),
+                ('description', models.CharField(blank=True, max_length=1048)),
                 ('url', models.CharField(blank=True, max_length=1048)),
             ],
         ),
