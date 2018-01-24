@@ -115,6 +115,9 @@ class Player {
 
         $(rect).on('focus', () => {
             this.selectedAnnotation = annotation;
+            document.querySelector(".current_ann").value = annotation.type;
+            $('#change-ann-btn').prop('disabled', false);
+            $('#change-ann-text').html('');
             $(this).triggerHandler('change-onscreen-annotations');
             $(this).triggerHandler('change-keyframes');
         });
@@ -156,6 +159,8 @@ class Player {
 
         $('#email-btn').click(this.emailWorker.bind(this));
 
+        $('#change-ann-btn').click(this.changeAnnotations.bind(this));
+
 
         // On drawing changed
         this.viewReady().then(() => {
@@ -165,6 +170,7 @@ class Player {
 
             $(this.view.creationRect).on('focus', () => {
                this.selectedAnnotation = null;
+               document.querySelector(".current_ann").value = '';
                 $(this).triggerHandler('change-onscreen-annotations');
                 $(this).triggerHandler('change-keyframes');
             });
@@ -437,6 +443,7 @@ class Player {
 
         if (annotation == this.selectedAnnotation) {
             this.selectedAnnotation = null;
+            document.querySelector(".current_ann").value = '';
         }
 
         for (let i = 0; i < this.annotations.length; i++) {
@@ -451,10 +458,41 @@ class Player {
         throw new Error("Player.deleteAnnotation: annotation not found");
     }
 
+    changeAnnotations(e) {
+        e.preventDefault();
+        console.log('se apeleaza');
+        if(this.selectedAnnotation) {
+            var newSVO = document.querySelector(".current_ann").value;
+            if(newSVO != '' && newSVO != 'null') {
+                if(newSVO === this.selectedAnnotation.type)
+                $('#change-ann-text').html('Same SVO');
+                else {
+                    this.selectedAnnotation.type = newSVO;
+                    for (let i = 0; i < this.annotations.length; i++) {
+                        if (this.annotations[i] === this.selectedAnnotation) {
+                            this.annotations[i].type = newSVO;
+                            $('#change-ann-text').html('Success!');
+                            break;
+                        }
+                    }
+                }    
+            }
+            else 
+            {
+                $('#change-ann-text').html('Empty string!');
+            }
+        }
+        else {
+            $('#change-ann-text').html('No selected box!');
+        }
+    }
+
+
     deleteSelectedKeyframe() {
         if (this.selectedAnnotation == null) return false;
         var selected = this.selectedAnnotation;
         this.selectedAnnotation = null;
+        document.querySelector(".current_ann").value = '';
         selected.deleteKeyframeAtTime(this.view.video.currentTime, this.isImageSequence);
 
         if (selected.keyframes.length === 0) {

@@ -243,3 +243,17 @@ div.imgplay {
     font-weight: 300;
     font-size: 18px;
 }
+
+.right-controls {
+    position: absolute;
+    right: 20px;
+    top: 100px;
+    width: 300px;
+    z-index: 100;
+    background: white;
+
+}
+
+.right-controls input {
+    width: 100%;
+}
