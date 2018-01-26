@@ -41,6 +41,15 @@
 	</option>
       {% endfor %}
     </select>
+
+    <select id="labels2" name="labels">
+      {% for label in label_data %}
+        <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
+	{{label.name}}
+	</option>
+      {% endfor %}
+    </select>
+ 
     
     Video description: <input type="text" name="description" id="description" value="{{ video.description }}"/><br>
     <script>
