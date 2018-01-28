@@ -13,7 +13,7 @@ class Annotation {
     }
 
 
-    constructor({fill, id, keyframes, type}) {
+    constructor({fill, id, keyframes, type, links}) {
         // Fill of annotation
         this.fill = fill;
 
@@ -25,7 +25,9 @@ class Annotation {
 
         // Type of annotation
         this.type = type;
-        
+
+        this.links = links;
+
         // Prevent adding new properties
         Misc.preventExtensions(this, Annotation);
     }
@@ -42,6 +44,7 @@ class Annotation {
             fill: fill,
             id: fill,
             type: type,
+            links: [], 
         });
     }
 
@@ -58,11 +61,17 @@ class Annotation {
             fill: fill,
             id: 0,
             type: type,
+            links: [],
         });
     }
 
     getId() {
         return this.keyframes;
+    }
+
+    addLink(annot_id) {
+        this.links.push(annot_id);
+        console.log(annot_id);
     }
 
     /**

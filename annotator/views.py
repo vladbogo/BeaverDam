@@ -147,10 +147,6 @@ def video(request, video_id):
         annotation_data = json.loads(video.annotation)
         for a in annotation_data:
             label_data.append({'name': a['type'], 'color': a['color'][1:]})
-    print(label_data)
-    for l in labels:
-         print(l.color)
-    #label_data.append({'name': l.name, 'color': l.color})
 
     help_content = ''
     if settings.HELP_URL and settings.HELP_USE_MARKDOWN:

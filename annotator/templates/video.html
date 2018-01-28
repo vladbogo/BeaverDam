@@ -34,23 +34,24 @@
 
   <div class="top-controls">
     SVO <input type="text" name="svo_description"/>
-    <select id="labels" name="labels">
+    <select id="annot1" name="annot1">
       {% for label in label_data %}
         <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
-	{{label.name}}
-	</option>
+            {{label.name}}
+        </option>
       {% endfor %}
     </select>
 
-    <select id="labels2" name="labels">
+    <select id="annot2" name="annot2">
       {% for label in label_data %}
         <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
-	{{label.name}}
-	</option>
+            {{label.name}}
+        </option>
       {% endfor %}
     </select>
- 
-    
+
+    <button type="button" id="add-link-btn">Add link</button>
+
     Video description: <input type="text" name="description" id="description" value="{{ video.description }}"/><br>
     <script>
       document.querySelector('input[name = "description"]').value = video.description;

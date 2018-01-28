@@ -161,6 +161,8 @@ class Player {
 
         $('#change-ann-btn').click(this.changeAnnotations.bind(this));
 
+        $('#add-link-btn').click(this.linkAnnotations.bind(this));
+
 
         // On drawing changed
         this.viewReady().then(() => {
@@ -487,6 +489,42 @@ class Player {
         }
     }
 
+    linkAnnotations(e) {
+        var select1 = document.getElementById("annot1").getElementsByTagName('option');
+        var select2 = document.getElementById("annot2").getElementsByTagName('option');
+
+        var annot1_name = '';
+        var color1;
+        for (var i = 0; i < select1.length; i++) {
+            if (select1[i].selected) {
+                annot1_name = select1[i].value;
+                color1 = select1[i].style.backgroundColor;
+            }
+        }
+
+        var annot2_name = '';
+        var color2;
+        for (var i = 0; i < select2.length; i++) {
+            if (select2[i].selected) {
+                annot2_name = select2[i].value;
+                color2 = select2[i].style.backgroundColor;
+            }
+        }
+ 
+        if (annot1_name === annot2_name) {
+            console.log('Cannot add link between same annotation');
+            return false;
+        }
+
+        for (var i = 0; i < this.annotations.length; i++) {
+            if (this.annotations[i].type == annot1_name) {
+                this.annotations[i].addLink(annot2_name)
+            }
+            if (this.annotations[i].type == annot2_name) {
+                this.annotations[i].addLink(annot1_name)
+            }
+        }
+    }
 
     deleteSelectedKeyframe() {
         if (this.selectedAnnotation == null) return false;
