@@ -33,29 +33,6 @@
 <div class="panel-body">
 
   <div class="top-controls">
-    SVO <input type="text" name="svo_description"/>
-    <select id="annot1" name="annot1">
-      {% for label in label_data %}
-        <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
-            {{label.name}}
-        </option>
-      {% endfor %}
-    </select>
-
-    <select id="annot2" name="annot2">
-      {% for label in label_data %}
-        <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
-            {{label.name}}
-        </option>
-      {% endfor %}
-    </select>
-
-    <button type="button" id="add-link-btn">Add link</button>
-
-    Video description: <input type="text" name="description" id="description" value="{{ video.description }}"/><br>
-    <script>
-      document.querySelector('input[name = "description"]').value = video.description;
-     </script>
 <!-- 
     <a class="btn btn-default" target="_blank" style="margin-left: 25px;"
         {% if help_embed %} id="show-help" {% else %} href="{{help_url}}" {% endif %}>
@@ -152,10 +129,50 @@
 </div>
 
 <div class="right-controls">
+
+  Video description:<br> <textarea name="description" id="description" style="width:300px; height:150px" value="{{ video.description }}"> </textarea><br>
+  <script>
+    document.querySelector('textarea[name = "description"]').value = video.description;
+  </script>
+
   <div id="current-annotation">
-    <p>Selected annotation is: <input type="text" name="current_ann" class="current_ann" /></p>
+  <!-- <p>Selected annotation is: <input type="text" name="current_ann" class="current_ann" /></p> --!>
+    SVO: <br> <textarea style="width:300px; height:75px" type="text" name="current_ann" id="current_ann"> </textarea> <br>
     <button type="button" id="change-ann-btn" disabled>Change</button>
     <span id="change-ann-text"></span>
+  </div>
+
+  <div id="link-annotation">
+    <p>
+    <select id="annot1" name="annot1">
+      {% for label in label_data %}
+        <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
+            {{label.name}}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select id="annot2" name="annot2">
+      {% for label in label_data %}
+        <option style="background-color: #{{label.color}}" value="{{label.name}}" id="object-option-{{label.name}}">
+            {{label.name}}
+        </option>
+      {% endfor %}
+    </select>
+
+    <button type="button" id="add-link-btn">Add link</button>
+
+    <div>
+    The links between annotations are:
+      <ul id="link-annotation-list">
+        {% for link in link_data %}
+          <li>{{link}}</li>
+        {% endfor %}
+      </ul>
+
+    </div>
+
+    </p>
   </div>
 </div>
 

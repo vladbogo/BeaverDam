@@ -1,6 +1,22 @@
 "use strict";
 
 var DataSources = {
+    link: {
+        fromJson: function(json) {
+            return {
+                color: json.color,
+                name: json.name,
+            };
+        },
+
+        toJson: function(link) {
+            return {
+                color: link.color,
+                name: link.name,
+            }
+        },
+    },
+
     frame: {
         fromJson: function(json) {
             return {
@@ -34,7 +50,7 @@ var DataSources = {
             annotation.keyframes = json.keyframes.map(DataSources.frame.fromJson);
             annotation.type = json.type;
             annotation.fill = json.color || Misc.getRandomColor();
-            annotation.links = json.links;
+            annotation.links = json.links.map(DataSources.link.fromJson);
             return annotation;
         },
 
@@ -43,7 +59,7 @@ var DataSources = {
                 keyframes: annotation.keyframes.map(DataSources.frame.toJson),
                 type: annotation.type,
                 color: annotation.fill,
-                links: annotation.links,
+                links: annotation.links.map(DataSources.link.toJson),
             };
         },
     },

@@ -88,6 +88,27 @@ class Player {
         });
     }
 
+    addNewElement(select, new_elem, color) {
+        var select1 = document.getElementById(select);
+
+        var res = [];
+        for (var i = 0; i < select1.getElementsByTagName('option').length; i++) {
+            res.push(select1[i].value);
+            if (select1[i].style.backgroundColor === color && select1[i].value == new_elem) {
+                return false;
+            }
+        }
+
+        var opt = document.createElement('option');
+        opt.value = new_elem;
+        opt.innerHTML = new_elem;
+        opt.style.backgroundColor = color;
+        select1.append(opt)
+
+        return true
+    }
+
+
     initBindAnnotationAndRect(annotation, rect) {
         // On PlayerView...
         this.annotationRectBindings.push({annotation, rect});
@@ -115,7 +136,8 @@ class Player {
 
         $(rect).on('focus', () => {
             this.selectedAnnotation = annotation;
-            document.querySelector(".current_ann").value = annotation.type;
+            document.getElementById("current_ann").value = annotation.type;
+
             $('#change-ann-btn').prop('disabled', false);
             $('#change-ann-text').html('');
             $(this).triggerHandler('change-onscreen-annotations');
@@ -171,8 +193,8 @@ class Player {
             });
 
             $(this.view.creationRect).on('focus', () => {
-               this.selectedAnnotation = null;
-               document.querySelector(".current_ann").value = '';
+                this.selectedAnnotation = null;
+                document.getElementById("current_ann").value = '';
                 $(this).triggerHandler('change-onscreen-annotations');
                 $(this).triggerHandler('change-keyframes');
             });
@@ -309,7 +331,7 @@ class Player {
         if (this.annotations.length === 0 && !confirm('Confirm that there are no objects in the video?')) {
             return;
         }
-        var desc = document.querySelector('input[name = "description"]').value;
+        var desc = document.querySelector('textarea[name = "description"]').value;
         DataSources.annotations.save(desc, this.videoId, this.annotations, this.metrics, window.mturk).then((response) => {
             // only show this if not running on turk
             if (!window.hitId)
@@ -445,7 +467,7 @@ class Player {
 
         if (annotation == this.selectedAnnotation) {
             this.selectedAnnotation = null;
-            document.querySelector(".current_ann").value = '';
+            document.getElementById("current_ann").value = '';
         }
 
         for (let i = 0; i < this.annotations.length; i++) {
@@ -460,24 +482,64 @@ class Player {
         throw new Error("Player.deleteAnnotation: annotation not found");
     }
 
+    changeElement(select, old_val, new_elem) {
+        var select1 = document.getElementById(select);
+
+        for (var i = 0; i < select1.getElementsByTagName('option').length; i++) {
+            if (select1[i].value === old_val) {
+                select1[i].value = new_elem;
+                select1[i].innerHTML = new_elem;
+            }
+        }
+    }
+
+    changeList(old_val, new_val) {
+        var ul = document.getElementById("link-annotation-list");
+        var vals = ul.getElementsByTagName('li')
+        for (var i = 0; i < vals.length; i++) {
+            vals[i].innerHTML = vals[i].innerHTML.replace(old_val, new_val)
+        }
+    }
+
     changeAnnotations(e) {
         e.preventDefault();
         console.log('se apeleaza');
         if(this.selectedAnnotation) {
-            var newSVO = document.querySelector(".current_ann").value;
+            var newSVO = document.getElementById("current_ann").value;
             if(newSVO != '' && newSVO != 'null') {
                 if(newSVO === this.selectedAnnotation.type)
                 $('#change-ann-text').html('Same SVO');
                 else {
+                    // change links
+                    if (this.selectedAnnotation.type != '') {
+                        this.changeElement("annot1", this.selectedAnnotation.type, newSVO);
+                        this.changeElement("annot2", this.selectedAnnotation.type, newSVO);
+                        this.changeList(this.selectedAnnotation.type, newSVO);
+                        for (let i = 0; i < this.annotations.length; i++) {
+                            for (let l = 0; l < this.annotations[i].links.length; l++) {
+                                if (this.annotations[i].links[l].name === this.selectedAnnotation.type && 
+                                        this.annotations[i].links[l].color == this.selectedAnnotation.fill) {
+                                    this.annotations[i].links[l].name = newSVO
+                                }
+                            }
+                        }
+                    }
+
+                    var old_val = this.selectedAnnotation.type;
                     this.selectedAnnotation.type = newSVO;
                     for (let i = 0; i < this.annotations.length; i++) {
                         if (this.annotations[i] === this.selectedAnnotation) {
                             this.annotations[i].type = newSVO;
                             $('#change-ann-text').html('Success!');
+
+                            if (old_val === '') {
+                                this.addNewElement('annot1', this.selectedAnnotation.type, this.selectedAnnotation.fill)
+                                this.addNewElement('annot2', this.selectedAnnotation.type, this.selectedAnnotation.fill)
+                            }
                             break;
                         }
                     }
-                }    
+                }
             }
             else 
             {
@@ -489,6 +551,19 @@ class Player {
         }
     }
 
+	rgbToHex(col) {
+		if(col.charAt(0)=='r')
+		{
+			col=col.replace('rgb(','').replace(')','').split(',');
+			var r=parseInt(col[0], 10).toString(16);
+			var g=parseInt(col[1], 10).toString(16);
+			var b=parseInt(col[2], 10).toString(16);
+			r=r.length==1?'0'+r:r; g=g.length==1?'0'+g:g; b=b.length==1?'0'+b:b;
+			var colHex='#'+r+g+b;
+			return colHex;
+		}
+	}
+
     linkAnnotations(e) {
         var select1 = document.getElementById("annot1").getElementsByTagName('option');
         var select2 = document.getElementById("annot2").getElementsByTagName('option');
@@ -498,7 +573,7 @@ class Player {
         for (var i = 0; i < select1.length; i++) {
             if (select1[i].selected) {
                 annot1_name = select1[i].value;
-                color1 = select1[i].style.backgroundColor;
+                color1 = this.rgbToHex(select1[i].style.backgroundColor);
             }
         }
 
@@ -507,21 +582,31 @@ class Player {
         for (var i = 0; i < select2.length; i++) {
             if (select2[i].selected) {
                 annot2_name = select2[i].value;
-                color2 = select2[i].style.backgroundColor;
+                color2 = this.rgbToHex(select2[i].style.backgroundColor);
             }
         }
  
-        if (annot1_name === annot2_name) {
-            console.log('Cannot add link between same annotation');
+        if (annot1_name === annot2_name && color1 === color2) {
+            window.alert('Cannot add link between same annotation');
             return false;
         }
 
+        var ul = document.getElementById("link-annotation-list");
+
         for (var i = 0; i < this.annotations.length; i++) {
-            if (this.annotations[i].type == annot1_name) {
-                this.annotations[i].addLink(annot2_name)
+            var ok = true
+            if (this.annotations[i].type == annot1_name && this.annotations[i].fill == color1) {
+                ok = this.annotations[i].addLink(color2, annot2_name);
+                if (ok === false) {
+                    window.alert('Link already exists')
+                    continue;
+                }
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode("('".concat(annot1_name, "', '", annot2_name, "')")));
+                ul.appendChild(li);
             }
-            if (this.annotations[i].type == annot2_name) {
-                this.annotations[i].addLink(annot1_name)
+            if (this.annotations[i].type == annot2_name && this.annotations[i].fill == color2) {
+                this.annotations[i].addLink(color1, annot1_name);
             }
         }
     }
@@ -530,7 +615,7 @@ class Player {
         if (this.selectedAnnotation == null) return false;
         var selected = this.selectedAnnotation;
         this.selectedAnnotation = null;
-        document.querySelector(".current_ann").value = '';
+        document.getElementById("current_ann").value = '';
         selected.deleteKeyframeAtTime(this.view.video.currentTime, this.isImageSequence);
 
         if (selected.keyframes.length === 0) {

@@ -142,19 +142,29 @@ def video(request, video_id):
     })
 
     label_data = []
+    link_data = []
 
     if video.annotation != '':
         annotation_data = json.loads(video.annotation)
         for a in annotation_data:
             label_data.append({'name': a['type'], 'color': a['color'][1:]})
+            for k in a['links']:
+                link1 = (a['type'], k['name'], a['color'], k['color'])
+                link2 = (k['name'], a['type'], k['color'], a['color'])
+                if link1 in link_data or link2 in link_data:
+                    continue
+                link_data.append(link1)
 
+    link_data = list(map(lambda x: (x[0], x[1]), link_data))
     help_content = ''
     if settings.HELP_URL and settings.HELP_USE_MARKDOWN:
         help_content = urllib.request.urlopen(settings.HELP_URL).read().decode('utf-8')
         help_content = markdown.markdown(help_content)
 
+
     response = render(request, 'video.html', context={
         'label_data': label_data,
+        'link_data': link_data,
         'video_data': video_data,
         'image_list': list(map(urllib.parse.quote, json.loads(video.image_list))) if video.image_list else 0,
         'image_list_path': urllib.parse.quote(video.host, safe='/:'),

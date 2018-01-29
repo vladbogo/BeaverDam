@@ -229,32 +229,32 @@ class PlayerView {
             this.$on('control-goto-end', 'click', () => this.jumpToTimeAndPause(this.video.duration));
             this.$on('control-delete-keyframe', 'click', () => this.deleteKeyframe());
 
-            $(this).on('keydn-i                ', () => this.addFullAnnotation());
+            //$(this).on('keydn-i                ', () => this.addFullAnnotation());
             // better key events => video
             // play/pause
             $(this).on('keydn-space            ', () => this.playPause());
             // rewind-play
-            $(this).on('keydn-semicolon keydn-q', () => this.rewind());
-            $(this).on('keyup-semicolon keyup-q', () => this.stopRewind());
+            //$(this).on('keydn-semicolon keydn-q', () => this.rewind());
+            //$(this).on('keyup-semicolon keyup-q', () => this.stopRewind());
             // step-play
-            $(this).on('keydn-period    keydn-e', () => this.play());
-            $(this).on('keyup-period    keyup-e', () => this.pause());
+            //$(this).on('keydn-period    keydn-e', () => this.play());
+            //$(this).on('keyup-period    keyup-e', () => this.pause());
             // Delete keyframe
-            $(this).on('keyup-delete    keyup-d', () => this.deleteKeyframe());
+            $(this).on('keyup-delete', () => this.deleteKeyframe());
             // Keyframe stepping
-            $(this).on('keydn-g                ', () => this.stepforward());
-            $(this).on('keydn-f                ', () => this.stepbackward());
+            //$(this).on('keydn-g                ', () => this.stepforward());
+            //$(this).on('keydn-f                ', () => this.stepbackward());
             // Keyframe duplication
-            $(this).on('keydn-r                ', () => this.duplicateKeyFrame());
+            //$(this).on('keydn-r                ', () => this.duplicateKeyFrame());
             // video frame stepping - capture the repeat events with the 'r' handler
-            $(this).on('keydn-a keydnr-a     ', () => {
-                if (!this.loading)
-                    this.video.previousFrame()
-            });
-            $(this).on('keydn-s keydnr-s    ', () => {
-                if (!this.loading)
-                    this.video.nextFrame()
-            });
+            //$(this).on('keydn-a keydnr-a     ', () => {
+            //    if (!this.loading)
+            //        this.video.previousFrame()
+            //});
+            //$(this).on('keydn-s keydnr-s    ', () => {
+            //    if (!this.loading)
+            //        this.video.nextFrame()
+            //});
             $('#scale-checkbox').on('click', () => {
                 this.scaleToFit = $('#scale-checkbox')[0].checked;
                 if (this.scaleToFit) {

@@ -32,18 +32,29 @@ class Annotation {
         Misc.preventExtensions(this, Annotation);
     }
 
+
+    static makeid() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 20; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+
     // The hacky but only way to make a Annotation right now.
     static newFromCreationRect() {
         //var type = document.querySelector('input[name = "object"]:checked').value;
-        var type = document.querySelector('input[name = "svo_description"]').value;
-        document.querySelector('input[name = "svo_description"]').value = '';
+        //var type = document.querySelector('textarea[name = "svo_description"]').value;
+        //document.querySelector('textarea[name = "svo_description"]').value = '';
 
-        var fill = Misc.getRandomColor(type);
+        var fill = Misc.getRandomColor(Annotation.makeid());
         return new Annotation({
             keyframes: [],
             fill: fill,
             id: fill,
-            type: type,
+            type: '',
             links: [], 
         });
     }
@@ -60,7 +71,7 @@ class Annotation {
             keyframes: [],
             fill: fill,
             id: 0,
-            type: type,
+            type: '',
             links: [],
         });
     }
@@ -69,9 +80,13 @@ class Annotation {
         return this.keyframes;
     }
 
-    addLink(annot_id) {
-        this.links.push(annot_id);
-        console.log(annot_id);
+    addLink(color, annot_id) {
+        for (var i = 0; i < this.links.length; i++) {
+            if (this.links[i]['color'] == color) {
+                return false
+            }
+        }
+        this.links.push({color: color, name: annot_id});
     }
 
     /**

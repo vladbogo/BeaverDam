@@ -3,6 +3,7 @@
     flex-direction: column;
     height: 100%;
     padding: 0;
+    width: calc(100% - 350px);
 }
 
 .top-controls {
@@ -251,7 +252,6 @@ div.imgplay {
     width: 300px;
     z-index: 100;
     background: white;
-
 }
 
 .right-controls input {
