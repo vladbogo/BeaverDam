@@ -57,24 +57,26 @@ var DataSources = {
             return annotations.map(DataSources.annotation.toJson);
         },
 
-        load: function(id) {
-            return fetch(`/annotation/${id}`, {
+        load: function(videoId, annotationId) {
+            
+            return fetch(`/annotation/${videoId}/${annotationId}/`, {
                 method: 'get'
             }).then((response) => {
+                
                 if (!response.ok) {
                     return Promise.reject("DataSources.annotations.load failed: fetch");
                 }
+            
                 return response.text();
             }).then((text) => {
                 var json = (text === '') ? [] : JSON.parse(text);
                 var annotations = DataSources.annotations.fromJson(json);
-
+               
                 return Promise.resolve(annotations);
             });
         },
 
-        save: function(desc,id, annotations, metrics, mturk) {
-            //console.log(desc);
+        save: function(desc, videoId, annotationId, annotations, metrics, mturk) {
             var json = DataSources.annotations.toJson(annotations);
             var object = JSON.stringify({
                 description: desc,
@@ -84,8 +86,7 @@ var DataSources = {
                 workerId: window.workerId,
                 assignmentId: window.assignmentId,
             });
-            console.log(object);
-            return fetch(`/annotation/${id}/`, {
+            return fetch(`/annotation/${videoId}/${annotationId}/`, {
                 headers: {
                     'X-CSRFToken': window.CSRFToken,
                     'Content-Type': 'application/json',

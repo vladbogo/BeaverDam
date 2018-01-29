@@ -14,10 +14,10 @@ urlpatterns = [
     url(r'^verified/$', verified_list),
     url(r'^readytopay/$', ready_to_pay),
 
-    url(r'^video/(\d+)/$', video, name='video'),
+    url(r'^video/(\d+)/(\d+)/$', video, name='video'),
     url(r'^video/(\d+)/next/$', next_unannotated),
     url(r'^video/(\d+)/verify/$', verify),
-    url(r'^annotation/(\d+)/$', AnnotationView.as_view()),
+    url(r'^annotation/(\d+)/(\d+)/$', AnnotationView.as_view()),
     url(r'^accept\-annotation/(\d+)/$', ReceiveCommand.as_view()),
     url(r'^reject\-annotation/(\d+)/$', ReceiveCommand.as_view()),
     url(r'^email-worker/(\d+)/$', ReceiveCommand.as_view()),

@@ -2,11 +2,12 @@
 
 
 class Player {
-    constructor({$container, videoSrc, videoId, videoStart, videoEnd, isImageSequence, turkMetadata}) {
-
+    constructor({$container, videoSrc, videoId, videoAnnotationId, videoStart, videoEnd, isImageSequence, turkMetadata}) {
+       
         this.$container = $container;
 
         this.videoId = videoId;
+        this.videoAnnotationId = videoAnnotationId;
 
         this.selectedAnnotation = null;
 
@@ -66,11 +67,13 @@ class Player {
     }
 
     initAnnotations() {
-        DataSources.annotations.load(this.videoId).then((annotations) => {
+        
+        
+        DataSources.annotations.load(this.videoId, this.videoAnnotationId).then((annotations) => {
             this.annotations = annotations;
             this.annotationsDataReady.resolve();
         });
-
+    
         // When this.annotations is loaded AND view is ready for drawing...
         Promise.all([this.annotationsDataReady(), this.viewReady()]).then(() => {
             for (let annotation of this.annotations) {
@@ -308,7 +311,7 @@ class Player {
             return;
         }
         var desc = document.querySelector('input[name = "description"]').value;
-        DataSources.annotations.save(desc, this.videoId, this.annotations, this.metrics, window.mturk).then((response) => {
+        DataSources.annotations.save(desc, this.videoId, this.videoAnnotationId, this.annotations, this.metrics, window.mturk).then((response) => {
             // only show this if not running on turk
             if (!window.hitId)
                 this.showModal("Save", response);
@@ -460,7 +463,6 @@ class Player {
 
     changeAnnotations(e) {
         e.preventDefault();
-        console.log('se apeleaza');
         if(this.selectedAnnotation) {
             var newSVO = document.querySelector(".current_ann").value;
             if(newSVO != '' && newSVO != 'null') {

@@ -15,10 +15,14 @@ class Label(models.Model):
 
 
 class Video(models.Model):
-    annotation = models.TextField(blank=True,
-        help_text="A JSON blob containing all user annotation sent from client.")
-    description = models.CharField(max_length=1048, blank=True,
-        help_text=("Description of action performed in video"))
+    annotation_0 = models.TextField(blank=True,
+        help_text="A JSON blob containing all user annotation sent from client. - annotator 0")
+    annotation_1 = models.TextField(blank=True,
+        help_text="A JSON blob containing all user annotation sent from client. - annotator 1")
+    description_0 = models.CharField(max_length=1048, blank=True,
+        help_text=("Description of action performed in video - annotator 0"))
+    description_1 = models.CharField(max_length=1048, blank=True,
+        help_text=("Description of action performed in video - annotator 1"))
     source = models.CharField(max_length=1048, blank=True,
         help_text=("Name of video source or type, for easier grouping/searching of videos."
             "This field is not used by BeaverDam and only facilitates querying on videos by type."))

@@ -72,7 +72,7 @@ def get_mturk_status(video, full_video_task):
     if full_video_task == None:
         if video.rejected == True:
             return "Rejected"
-        elif video.annotation == '':
+        elif video.annotation_0 == '':
             return "Not Published"
         else:
             return "Awaiting Approval"
@@ -82,13 +82,13 @@ def get_mturk_status(video, full_video_task):
         return "Awaiting Approval"
 
 @xframe_options_exempt
-def video(request, video_id):
+def video(request, video_id, annotation_id):
     try:
         video = Video.objects.get(id=video_id)
         labels = Label.objects.all()
     except Video.DoesNotExist:
         raise Http404('No video with id "{}". Possible fixes: \n1) Download an up to date DB, see README. \n2) Add this video to the DB via /admin'.format(video_id))
-
+  
     mturk_data = mturk.utils.authenticate_hit(request)
     if 'error' in mturk_data:
         return HttpResponseForbidden(mturk_data['error'])
@@ -126,30 +126,51 @@ def video(request, video_id):
 
     mturk_data['status'] = get_mturk_status(video, turk_task)
     mturk_data['has_current_full_video_task'] = full_video_task_data != None
-
-    video_data = json.dumps({
-        'id': video.id,
-        'location': video.url,
-        'path': video.host,
-        'is_image_sequence': True if video.image_list else False,
-        'annotated': video.annotation != '',
-        'verified': video.verified,
-        'rejected': video.rejected,
-        'start_time': start_time,
-        'end_time' : end_time,
-        'turk_task' : full_video_task_data,
-        'description' : video.description
-    })
-
     label_data = []
+   
+    if (float(annotation_id) == 0):
+        video_data = json.dumps({
+            'id': video.id,
+            'annotation_id':annotation_id,
+            'location': video.url,
+            'path': video.host,
+            'is_image_sequence': True if video.image_list else False,
+            'annotated': video.annotation_0 != '',
+            'verified': video.verified,
+            'rejected': video.rejected,
+            'start_time': start_time,
+            'end_time' : end_time,
+            'turk_task' : full_video_task_data,
+            'description' : video.description_0
+            })
 
-    if video.annotation != '':
-        annotation_data = json.loads(video.annotation)
-        for a in annotation_data:
-            label_data.append({'name': a['type'], 'color': a['color'][1:]})
-    print(label_data)
-    for l in labels:
-         print(l.color)
+        if video.annotation_0 != '':
+            annotation_data = json.loads(video.annotation_0)
+            for a in annotation_data:
+                label_data.append({'name': a['type'], 'color': a['color'][1:]})
+    else:
+        video_data = json.dumps({
+            'id': video.id,
+            'annotation_id':annotation_id,
+            'location': video.url,
+            'path': video.host,
+            'is_image_sequence': True if video.image_list else False,
+            'annotated': video.annotation_1 != '',
+            'verified': video.verified,
+            'rejected': video.rejected,
+            'start_time': start_time,
+            'end_time' : end_time,
+            'turk_task' : full_video_task_data,
+            'description' : video.description_1
+        })
+        if video.annotation_1 != '':
+            annotation_data = json.loads(video.annotation_1)
+            for a in annotation_data:
+                label_data.append({'name': a['type'], 'color': a['color'][1:]})
+   
+    #print(label_data)
+    #for l in labels:
+    #    print(l.color)
     #label_data.append({'name': l.name, 'color': l.color})
 
     help_content = ''
@@ -171,21 +192,32 @@ def video(request, video_id):
     })
     if not mturk_data['authenticated']:
         response['X-Frame-Options'] = 'SAMEORIGIN'
+
+    
     return response
 
 
 class AnnotationView(View):
 
-    def get(self, request, video_id):
+    def get(self, request, video_id, annotation_id):
         video = Video.objects.get(id=video_id)
-        return HttpResponse(video.annotation, content_type='application/json')
+        
+        if (float(annotation_id) == 0):
+            return HttpResponse(video.annotation_0, content_type='application/json')
+        else:
+            return HttpResponse(video.annotation_1, content_type='application/json')
 
-    def post(self, request, video_id):
+    def post(self, request, video_id, annotation_id):
         data = json.loads(request.body.decode('utf-8'))
 
         video = Video.objects.get(id=video_id)
-        video.annotation = json.dumps(data['annotation'])
-        video.description = data['description']
+        if (float(annotation_id) == 0):
+            video.annotation_0 = json.dumps(data['annotation'])
+            video.description_0 = data['description']
+        else:
+            video.annotation_1 = json.dumps(data['annotation'])
+            video.description_1 = data['description']
+        
         video.save()
 
         hit_id = data.get('hitId', None)

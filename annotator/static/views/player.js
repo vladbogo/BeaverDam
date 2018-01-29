@@ -13,6 +13,7 @@ var PlayerViewConstants = {
 
 class PlayerView {
     constructor({$container, videoSrc, videoStart, videoEnd, isImageSequence}) {
+      
         // This container of the player
         this.$container = $container;
 

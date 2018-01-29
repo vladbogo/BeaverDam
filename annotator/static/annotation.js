@@ -12,7 +12,6 @@ class Annotation {
         return 0.01 /* seconds */;
     }
 
-
     constructor({fill, id, keyframes, type}) {
         // Fill of annotation
         this.fill = fill;

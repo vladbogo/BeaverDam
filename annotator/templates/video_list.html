@@ -13,26 +13,18 @@
     <thead>
       <tr>
         <th>Id</th>
-        <th>Annotations</th>
-        <th>Verified</th>
         <th>File</th>
-        <th>Type</th>
-        <th>Link</th>
+        <th>Annotation_0</th>
+        <th>Annotation_1</th>
       </tr>
     </thead>
     <tbody>
       {% for video in videos %}
       <tr>
         <td>{{ video.id }}</td>
-        <td>{{ video.annotation|yesno }}</td>
-        <td>{{ video.verified|yesno }}</td>
         <td>{{ video.filename }}</td>
-        {% if video.image_list %}
-          <td>Sequence</td>
-        {% else %}
-          <td>Video</td>
-        {% endif %}
-        <td><a href="{% url "video" video.id %}">view</a></td>
+        <td><a href="{% url "video" video.id 0 %}">{{ video.annotation_0|yesno }}</a></td>
+        <td><a href="{% url "video" video.id 1 %}">{{ video.annotation_1|yesno }}</a></td>
       </tr>
       {% endfor %}
     </tbody>
