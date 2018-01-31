@@ -331,6 +331,12 @@ class Player {
         if (this.annotations.length === 0 && !confirm('Confirm that there are no objects in the video?')) {
             return;
         }
+        for (let i = 0; i < this.annotations.length; i++) {
+            if (this.annotations[i].type === '') {
+                window.alert('You have an empty SVO. Fill in the description to continue.');
+                return false;
+            }
+        }
         var desc = document.querySelector('textarea[name = "description"]').value;
         DataSources.annotations.save(desc, this.videoId, this.annotations, this.metrics, window.mturk).then((response) => {
             // only show this if not running on turk
@@ -462,6 +468,35 @@ class Player {
         this.annotations.push(annotation)
     }
 
+    removeFromList(name, color) {
+        var list = document.getElementById('link-annotation-list');
+        var li = list.getElementsByTagName('li');
+
+        var toRemove = []
+        for (let i=0; i < li.length; i++) {
+            if(li[i].innerHTML.indexOf(name) > -1) {
+                toRemove.push(li[i]);
+            }
+        }
+
+        for (let i = 0; i < toRemove.length; i++) {
+            list.removeChild(toRemove[i]);
+        }
+    }
+
+    removeFromElem(select, name, color) {
+        var select1 = document.getElementById(select);
+
+        console.log(color)
+        for (var i = 0; i < select1.getElementsByTagName('option').length; i++) {
+            console.log(select1[i])
+            if (select1[i].value === name && this.rgbToHex(select1[i].style.backgroundColor) == color) {
+                select1.removeChild(select1[i])
+            }
+        }
+  
+    }
+
     deleteAnnotation(annotation) {
         if (annotation == null) return false;
 
@@ -469,6 +504,20 @@ class Player {
             this.selectedAnnotation = null;
             document.getElementById("current_ann").value = '';
         }
+
+        for (let i = 0; i < this.annotations.length; i++) {
+            for (let k = 0; k < this.annotations[i].links.length; k++) {
+                if (this.annotations[i].links[k].name === annotation.type &&
+                        this.annotations[i].links[k].color === annotation.fill) {
+                    this.annotations[i].links.splice(k, 1);
+                }
+            }
+        }
+
+        this.removeFromElem('annot1', annotation.type, annotation.fill)
+        this.removeFromElem('annot2', annotation.type, annotation.fill)
+
+        this.removeFromList(annotation.type, annotation.fill);
 
         for (let i = 0; i < this.annotations.length; i++) {
             if (this.annotations[i] === annotation) {
@@ -482,11 +531,13 @@ class Player {
         throw new Error("Player.deleteAnnotation: annotation not found");
     }
 
-    changeElement(select, old_val, new_elem) {
+    changeElement(select, old_val, new_elem, color) {
         var select1 = document.getElementById(select);
 
+        console.log(color)
         for (var i = 0; i < select1.getElementsByTagName('option').length; i++) {
-            if (select1[i].value === old_val) {
+            console.log(select1[i])
+            if (select1[i].value === old_val && this.rgbToHex(select1[i].style.backgroundColor) == color) {
                 select1[i].value = new_elem;
                 select1[i].innerHTML = new_elem;
             }
@@ -512,8 +563,8 @@ class Player {
                 else {
                     // change links
                     if (this.selectedAnnotation.type != '') {
-                        this.changeElement("annot1", this.selectedAnnotation.type, newSVO);
-                        this.changeElement("annot2", this.selectedAnnotation.type, newSVO);
+                        this.changeElement("annot1", this.selectedAnnotation.type, newSVO, this.selectedAnnotation.fill);
+                        this.changeElement("annot2", this.selectedAnnotation.type, newSVO, this.selectedAnnotation.fill);
                         this.changeList(this.selectedAnnotation.type, newSVO);
                         for (let i = 0; i < this.annotations.length; i++) {
                             for (let l = 0; l < this.annotations[i].links.length; l++) {
@@ -562,6 +613,7 @@ class Player {
 			var colHex='#'+r+g+b;
 			return colHex;
 		}
+        return col;
 	}
 
     linkAnnotations(e) {
