@@ -2,6 +2,10 @@
 
 {% block head %}
   <link rel="stylesheet" type="text/css" href="/static/app.css"/>
+
+  <script>
+    video={{video_data|safe}}
+  </script>
 {% endblock %}
 
 {% block body %}
@@ -14,17 +18,13 @@
       <tr>
         <th>Id</th>
         <th>File</th>
-        <th>Annotation_0</th>
-        <th>Annotation_1</th>
       </tr>
     </thead>
     <tbody>
       {% for video in videos %}
       <tr>
         <td>{{ video.id }}</td>
-        <td>{{ video.filename }}</td>
-        <td><a href="{% url "video" video.id 0 %}">{{ video.annotation_0|yesno }}</a></td>
-        <td><a href="{% url "video" video.id 1 %}">{{ video.annotation_1|yesno }}</a></td>
+        <td><a href="{% url 'videoAnnotations' video.id %}">{{ video.filename }}</td>
       </tr>
       {% endfor %}
     </tbody>

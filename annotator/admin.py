@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from .models import Video
 from .models import Label
+from .models import VideoAnnotation
 from mturk.models import FullVideoTask
 from mturk.queries import get_active_video_turk_task
 from django.db.models import Count, Sum, Q, Case, When, IntegerField
@@ -81,3 +82,4 @@ class VideoAdmin(admin.ModelAdmin):
     
 admin.site.register(Video, VideoAdmin)
 admin.site.register(Label)
+admin.site.register(VideoAnnotation)

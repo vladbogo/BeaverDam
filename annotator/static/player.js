@@ -60,7 +60,7 @@ class Player {
 
     initView() {
         var {$container, videoSrc, videoStart, videoEnd} = this;
-
+        
         this.view = new PlayerView({$container, videoSrc, videoStart, videoEnd});
 
         this.view.ready().then(this.viewReady.resolve);
@@ -163,7 +163,6 @@ class Player {
         $('#email-btn').click(this.emailWorker.bind(this));
 
         $('#change-ann-btn').click(this.changeAnnotations.bind(this));
-
 
         // On drawing changed
         this.viewReady().then(() => {
@@ -503,6 +502,7 @@ class Player {
 
         return true;
     }
+
 }
 
 void Player;
