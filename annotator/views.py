@@ -280,7 +280,13 @@ def createVideoAnnotation(request, video_id):
     videoAnnotationId = videoAnnotation.id
 
     return redirect('video', video_id, videoAnnotationId)
-    #return video(request, video_id, videoAnnotationId)
+
+def deleteVideoAnnotation(request, video_id, annotation_id):
+    videoAnnotationObject = VideoAnnotation.objects.get(id=annotation_id)
+
+    videoAnnotationObject.delete()
+
+    return redirect('videoAnnotations', video_id)
 
 class AnnotationView(View):
 

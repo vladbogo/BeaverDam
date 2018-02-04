@@ -16,6 +16,7 @@ urlpatterns = [
 
     url(r'^videoAnnotations/(\d+)/$', videoAnnotations, name='videoAnnotations'),
     url(r'^createVideoAnnotation/(\d+)/$', createVideoAnnotation, name='createVideoAnnotation'),
+    url(r'^deleteVideoAnnotation/(\d+)/(\d+)/$', deleteVideoAnnotation, name='deleteVideoAnnotation'),
     #url(r'^videoAnnotations/(\d+)/$', videoAnnotations),
     url(r'^video/(\d+)/(\d+)/$', video, name='video'),
     url(r'^video/(\d+)/next/$', next_unannotated),

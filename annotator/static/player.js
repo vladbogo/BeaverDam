@@ -164,6 +164,8 @@ class Player {
 
         $('#change-ann-btn').click(this.changeAnnotations.bind(this));
 
+        $('#btn-deleteAnnotation').click(this.deleteFullAnnotation.bind(this));
+
         // On drawing changed
         this.viewReady().then(() => {
             $(this.view.creationRect).on('drag-start', () => {
@@ -315,6 +317,15 @@ class Player {
             if (!window.hitId)
                 this.showModal("Save", response);
         });
+    }
+
+    deleteFullAnnotation(){
+        var url
+        var urlAux 
+        url = window.location.href
+        urlAux = '/deleteVideoAnnotation/' + this.videoId + '/' + this.videoAnnotationId + '/'
+        url = url.replace(window.location.pathname, urlAux)
+        window.location.replace(url)
     }
 
     showModal(title, message) {
