@@ -67,8 +67,9 @@
                 <button id="btn-show-email" type="button" class="btn">E-mail Worker</button>
               {% endif %}
             {% endif %}
-            <button class="btn" disabled>{{ mturk_data.status }}</button>
+            <!-- <button class="btn" disabled>{{ mturk_data.status }}</button> -->
           {% endif %}
+          <button id="btn-deleteAnnotation" type="button" class="btn btn-danger">Delete</button>
         </div>
       {% endif %}
     {% else %}

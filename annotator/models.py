@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.staticfiles import finders
-
+from django.contrib.auth.models import User
 
 class Label(models.Model):
     """The classes available for workers to choose from for each object."""
@@ -13,12 +13,7 @@ class Label(models.Model):
     def __str__(self):
         return self.name
 
-
 class Video(models.Model):
-    annotation = models.TextField(blank=True,
-        help_text="A JSON blob containing all user annotation sent from client.")
-    description = models.CharField(max_length=1048, blank=True,
-        help_text=("Description of action performed in video"))
     source = models.CharField(max_length=1048, blank=True,
         help_text=("Name of video source or type, for easier grouping/searching of videos."
             "This field is not used by BeaverDam and only facilitates querying on videos by type."))
@@ -63,3 +58,13 @@ class Video(models.Model):
             return self.annotation.count('"frame"')
         else:
             return self.annotation.count('"frame": {}'.format(at_time))
+
+class VideoAnnotation(models.Model):
+    videoId     = models.ForeignKey(Video)
+    userId      = models.ForeignKey(User)
+    id          = models.AutoField(primary_key=True)
+    annotation  = models.TextField(blank=True)
+    description = models.CharField(max_length=1048, blank=True)
+
+    def __str__(self):
+        return str(self.id)+' '+str(self.videoId)

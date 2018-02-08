@@ -9,12 +9,13 @@ $(() => {
 
     // Chrome extensions rely on window being extensible
     // Misc.preventExtensions(window);
-
+  
     // Make the player
     window.p = new Player({
         $container: $("#player"),
         videoSrc: window.video.location,
         videoId: window.video.id,
+        videoAnnotationId: window.video.annotation_id,
         videoStart: window.video.start_time,
         videoEnd: window.video.end_time,
         isImageSequence: window.video.is_image_sequence,
