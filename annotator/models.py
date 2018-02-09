@@ -46,8 +46,8 @@ class Video(models.Model):
     def url(self):
         if self.image_list:
             return 'Image List'
-        elif finders.find('videos/{}.mp4'.format(self.id)):
-            return '/static/videos/{}.mp4'.format(self.id)
+        elif finders.find('videos/{}.MP4'.format(self.id)):
+            return '/static/videos/{}.MP4'.format(self.id)
         elif self.filename and self.host:
             return self.host + self.filename
         else:

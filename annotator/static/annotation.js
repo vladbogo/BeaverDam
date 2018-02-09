@@ -89,6 +89,16 @@ class Annotation {
         this.links.push({color: color, name: annot_id});
     }
 
+    removeLink(color, annot_id) {
+        for (var i = 0; i < this.links.length; i++) {
+            if (this.links[i]['color'] == color) {
+                this.links.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * A "frame" is the interpolation of the two closest keyframes. It tells us:
      * - The previous and next keyframes

@@ -188,6 +188,8 @@ class Player {
 
         $('#add-link-btn').click(this.linkAnnotations.bind(this));
 
+        $('#delete-link-btn').click(this.deleteLinkAnnotations.bind(this));
+
         $('#btn-deleteAnnotation').click(this.deleteFullAnnotation.bind(this));
 
         // On drawing changed
@@ -481,6 +483,24 @@ class Player {
         this.annotations.push(annotation)
     }
 
+    removeOneEntryFromList(name1, color1, name2, color2) {
+        var list = document.getElementById('link-annotation-list');
+        var li = list.getElementsByTagName('li');
+
+        var toRemove = []
+        for (let i=0; i < li.length; i++) {
+            if(li[i].innerHTML.indexOf(name1) > -1 && li[i].innerHTML.indexOf(name2) > -1) {
+                toRemove.push(li[i]);
+            }
+        }
+
+        for (let i = 0; i < toRemove.length; i++) {
+            list.removeChild(toRemove[i]);
+        }
+    }
+
+
+
     removeFromList(name, color) {
         var list = document.getElementById('link-annotation-list');
         var li = list.getElementsByTagName('li');
@@ -627,6 +647,49 @@ class Player {
 		}
         return col;
 	}
+
+    deleteLinkAnnotations(e) {
+        var select1 = document.getElementById("annot1").getElementsByTagName('option');
+        var select2 = document.getElementById("annot2").getElementsByTagName('option');
+
+        var annot1_name = '';
+        var color1;
+        for (var i = 0; i < select1.length; i++) {
+            if (select1[i].selected) {
+                annot1_name = select1[i].value;
+                color1 = this.rgbToHex(select1[i].style.backgroundColor);
+            }
+        }
+
+        var annot2_name = '';
+        var color2;
+        for (var i = 0; i < select2.length; i++) {
+            if (select2[i].selected) {
+                annot2_name = select2[i].value;
+                color2 = this.rgbToHex(select2[i].style.backgroundColor);
+            }
+        }
+
+        if (annot1_name === annot2_name && color1 === color2) {
+            window.alert('The link does not exist');
+            return false;
+        }
+
+        var ul = document.getElementById("link-annotation-list");
+
+        for (var i = 0; i < this.annotations.length; i++) {
+            var ok = true
+            if ((this.annotations[i].type == annot1_name && this.annotations[i].fill == color1)
+            || (this.annotations[i].type == annot2_name && this.annotations[i].fill == color2)) {
+                ok = this.annotations[i].removeLink(color1, annot1_name);
+                ok = this.annotations[i].removeLink(color2, annot2_name);
+
+                this.removeOneEntryFromList(annot1_name, color1, annot2_name, color2)
+            }
+        }
+ 
+    }
+
 
     linkAnnotations(e) {
         var select1 = document.getElementById("annot1").getElementsByTagName('option');
