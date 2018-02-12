@@ -314,7 +314,7 @@ class AnnotationView(View):
         videoAnnotation = VideoAnnotation.objects.get(id=annotation_id)
 
         videoAnnotation.annotation = json.dumps(data['annotation'])
-        videoAnnotation.description = json.dumps(data['description'])
+        videoAnnotation.description = data['description']
         
         videoAnnotation.save()
 
