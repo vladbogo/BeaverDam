@@ -56,7 +56,7 @@ class PlayerView {
         // are we waiting for buffering
         this.loading = true;
 
-        this.scaleToFit = false;
+        this.scaleToFit = true;
 
         // whether or not we are using an image sequence or a video style renderer
         this.isImageSequence = isImageSequence;
@@ -83,10 +83,10 @@ class PlayerView {
 
         if (helpEmbedded) {
             // check cookie
-            var hasSeen = document.cookie && document.cookie.indexOf('has_seen_help=') > -1
-            if (!hasSeen) {
-                $('#instructionModal').modal();
-            }
+            // var hasSeen = document.cookie && document.cookie.indexOf('has_seen_help=') > -1
+            // if (!hasSeen) {
+            //    $('#instructionModal').modal();
+            //}
             var date = new Date();
             date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
             document.cookie = 'has_seen_help=yes; expires=' + date.toGMTString() + '; path=/';
@@ -198,6 +198,8 @@ class PlayerView {
         this.video.onBuffering((isBuffering) => {
             this.loading = isBuffering;
         })
+
+        this.performScaleToFit();
     }
 
     initHandlers() {
@@ -241,7 +243,7 @@ class PlayerView {
             //$(this).on('keydn-period    keydn-e', () => this.play());
             //$(this).on('keyup-period    keyup-e', () => this.pause());
             // Delete keyframe
-            $(this).on('keyup-delete      keyup-1', () => this.deleteKeyframe());
+            $(this).on('keyup-delete', () => this.deleteKeyframe());
             // Keyframe stepping
             //$(this).on('keydn-g                ', () => this.stepforward());
             //$(this).on('keydn-f                ', () => this.stepbackward());
@@ -257,6 +259,14 @@ class PlayerView {
             //        this.video.nextFrame()
             //});
             $('#scale-checkbox').on('click', () => {
+                this.performScaleToFit()
+            });
+            this.sizeVideoFrame();
+            this.loading = false;
+        });
+    }
+
+    performScaleToFit() {
                 this.scaleToFit = $('#scale-checkbox')[0].checked;
                 if (this.scaleToFit) {
                     this.$('video').css({
@@ -271,10 +281,7 @@ class PlayerView {
                 }
                 this.video.fit();
                 this.sizeVideoFrame();
-            });
-            this.sizeVideoFrame();
-            this.loading = false;
-        });
+ 
     }
 
     // Time control

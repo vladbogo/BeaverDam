@@ -192,6 +192,8 @@ class Player {
 
         $('#btn-deleteAnnotation').click(this.deleteFullAnnotation.bind(this));
 
+        $('#delete-selected-btn').click(this.deleteSVO.bind(this));
+
         // On drawing changed
         this.viewReady().then(() => {
             $(this.view.creationRect).on('drag-start', () => {
@@ -210,6 +212,13 @@ class Player {
             });
 
             $(this.view).on('create-rect', (e, rect) => {
+                for (let i = 0; i < this.annotations.length; i++) {
+                    if (this.annotations[i].type == '') {
+                        window.alert('Insert description for previous SVO')
+                        this.view.deleteRect(rect);
+                        return false;
+                    }
+                }
                 this.addAnnotationAtCurrentTimeFromRect(rect);
                 rect.focus();
                 $(this).triggerHandler('change-keyframes');
@@ -499,8 +508,6 @@ class Player {
         }
     }
 
-
-
     removeFromList(name, color) {
         var list = document.getElementById('link-annotation-list');
         var li = list.getElementsByTagName('li');
@@ -520,14 +527,24 @@ class Player {
     removeFromElem(select, name, color) {
         var select1 = document.getElementById(select);
 
-        console.log(color)
         for (var i = 0; i < select1.getElementsByTagName('option').length; i++) {
-            console.log(select1[i])
             if (select1[i].value === name && this.rgbToHex(select1[i].style.backgroundColor) == color) {
                 select1.removeChild(select1[i])
             }
         }
   
+    }
+
+    deleteSVO() {
+        if (this.selectedAnnotation == null) {
+            window.alert('No selected annotation');
+            return false;
+        }
+
+        this.deleteAnnotation(this.selectedAnnotation);
+
+        $(this).triggerHandler('change-onscreen-annotations');
+        $(this).triggerHandler('change-keyframes');
     }
 
     deleteAnnotation(annotation) {
