@@ -15,6 +15,7 @@
       <tr>
         <th>Id</th>
         <th>File</th>
+        <th>Number of Annotations</th>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +23,13 @@
       <tr>
         <td>{{ video.id }}</td>
         <td><a href="{% url 'videoAnnotations' video.id %}">{{ video.filename }}</td>
+        <td>
+          {% if video.number_of_annotations == 0 %}
+            No annotations
+          {% else %}
+            {{video.number_of_annotations}}
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

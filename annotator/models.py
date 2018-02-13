@@ -29,6 +29,7 @@ class Video(models.Model):
     rejected = models.BooleanField(default=False, help_text="Rejected by expert.")
     labels = models.ManyToManyField(Label, blank=True)
 
+
     @classmethod
     def from_list(cls, path_to_list, *, source, host, filename_prefix=''):
         created = []
@@ -58,6 +59,10 @@ class Video(models.Model):
             return self.annotation.count('"frame"')
         else:
             return self.annotation.count('"frame": {}'.format(at_time))
+
+    def computeNumberOfAnnotations(self):
+        return VideoAnnotation.objects.filter(videoId=self.id).count()
+    number_of_annotations = property(computeNumberOfAnnotations)
 
 class VideoAnnotation(models.Model):
     videoId     = models.ForeignKey(Video)
